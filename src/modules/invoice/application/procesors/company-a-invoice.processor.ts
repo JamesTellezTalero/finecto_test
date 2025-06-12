@@ -6,8 +6,6 @@ import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
 @Injectable()
 export class CompanyAInvoiceProcessor implements IInvoiceProcessor {
     processInvoice(invoice: InvoiceDto): InvoiceOutputDto {
-        console.log("invoice: ", invoice);
-
         const hadAlcohol = invoice.lines.some((line) =>
             line.description.toLowerCase().includes("alcohol")
         );

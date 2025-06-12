@@ -11,7 +11,6 @@ export class InvoiceController {
     @Post("")
     async InvoiceTransformData(@Body() invoiceDto: InvoiceInputDto) {
         invoiceDto = await InvoiceInputDto.FromPlain(invoiceDto);
-        console.log("invoiceDto: ", invoiceDto);
         return await this.invoiceTransformUseCase.execute(invoiceDto);
     }
 }

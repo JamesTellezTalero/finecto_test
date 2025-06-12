@@ -13,11 +13,9 @@ export class InvoiceTransformUseCase
     ) {}
 
     async execute(input: InvoiceDto): Promise<InvoiceOutputDto> {
-        console.log("InvoiceTransformUseCase company: ", input.company);
         const processor = this.invoiceProcessorFactory.createInvoiceProcessor(
             input.company
         );
-        console.log("processor: ", processor);
         const result = processor.processInvoice(input);
         return result;
     }
