@@ -1,98 +1,573 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🧠 Lógicas de Negocio - Procesamiento Inteligente
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📋 Introducción
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Este middleware implementa lógicas de negocio específicas para cada compañía, aplicando diferentes reglas de validación y categorización tanto para **vendedores** como para **facturas**. Cada compañía tiene sus propios requerimientos empresariales que se reflejan en el procesamiento automatizado de datos.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 🏢 Compañía A - Lógicas de Negocio
 
-## Project setup
+### 👥 Procesamiento de Vendedores (Company A)
 
-```bash
-$ npm install
+**Objetivo**: Identificar y gestionar vendedores internacionales que requieren validación bancaria adicional.
+
+#### 🔍 Reglas de Negocio:
+
+- **Vendedores de EE.UU.**: No requieren validación adicional
+- **Vendedores Internacionales**: Requieren confirmación de detalles bancarios internacionales
+
+#### ⚙️ Lógica Implementada:
+
+```typescript
+if (vendor.country.toUpperCase() !== "US") {
+    transformedVendor.internationalBank =
+        "Please confirm international bank details";
+}
 ```
 
-## Compile and run the project
+#### 📊 Ejemplos de Transformación:
 
-```bash
-# development
-$ npm run start
+| **Entrada**          | **País** | **Salida**                                                        |
+| -------------------- | -------- | ----------------------------------------------------------------- |
+| Global Supplies Ltd. | `FR`     | ✅ internationalBank: "Please confirm international bank details" |
+| Local Corp           | `US`     | ✅ Sin campos adicionales                                         |
+| Tokyo Industries     | `JP`     | ✅ internationalBank: "Please confirm international bank details" |
 
-# watch mode
-$ npm run start:dev
+---
 
-# production mode
-$ npm run start:prod
+### 🧾 Procesamiento de Facturas (Company A)
+
+**Objetivo**: Categorizar facturas basándose en la presencia de productos con alcohol.
+
+#### 🔍 Reglas de Negocio:
+
+- **Facturas con Alcohol**: Código de cuenta `ALC-001`
+- **Facturas Sin Alcohol**: Código de cuenta `STD-001`
+
+#### ⚙️ Lógica Implementada:
+
+```typescript
+const hasAlcohol = invoice.lines.some((line) =>
+    line.description.toLowerCase().includes("alcohol")
+);
+account = hasAlcohol ? "ALC-001" : "STD-001";
 ```
 
-## Run tests
+#### 📊 Ejemplos de Transformación:
 
-```bash
-# unit tests
-$ npm run test
+| **Descripción de Líneas**                | **Código de Cuenta** | **Categoría**  |
+| ---------------------------------------- | -------------------- | -------------- |
+| "Office supplies", "Beverages - alcohol" | `ALC-001`            | 🍷 Con Alcohol |
+| "Office supplies", "Water bottles"       | `STD-001`            | 📋 Estándar    |
 
-# e2e tests
-$ npm run test:e2e
+---
 
-# test coverage
-$ npm run test:cov
+## 🏢 Compañía B - Lógicas de Negocio
+
+### 👥 Procesamiento de Vendedores (Company B)
+
+**Objetivo**: Validar que los vendedores estadounidenses tengan toda la documentación requerida.
+
+#### 🔍 Reglas de Negocio:
+
+- **Vendedores No-EE.UU.**: Automáticamente verificados
+- **Vendedores EE.UU.**: Requieren número de registro Y ID fiscal
+
+#### ⚙️ Lógica Implementada:
+
+```typescript
+if (vendor.country.toUpperCase() === "US") {
+    if (!vendor.registrationNumber && !vendor.taxId) {
+        status = "Incomplete - missing registration/tax details";
+    } else if (!vendor.registrationNumber) {
+        status = "Incomplete - missing registration details";
+    } else if (!vendor.taxId) {
+        status = "Incomplete - missing tax details";
+    } else {
+        status = "Verified";
+    }
+}
 ```
 
-## Deployment
+#### 📊 Estados de Validación:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+| **País** | **Registro** | **Tax ID** | **Estado**                                         |
+| -------- | ------------ | ---------- | -------------------------------------------------- |
+| `US`     | ❌           | ❌         | 🚫 "Incomplete - missing registration/tax details" |
+| `US`     | ❌           | ✅         | 🚫 "Incomplete - missing registration details"     |
+| `US`     | ✅           | ❌         | 🚫 "Incomplete - missing tax details"              |
+| `US`     | ✅           | ✅         | ✅ "Verified"                                      |
+| `CA`     | N/A          | N/A        | ✅ "Verified"                                      |
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+---
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+### 🧾 Procesamiento de Facturas (Company B)
+
+**Objetivo**: Categorización multi-producto considerando alcohol Y tabaco.
+
+#### 🔍 Reglas de Negocio:
+
+- **Alcohol + Tabaco**: Código `MULTI-B` (Producto mixto)
+- **Solo Alcohol**: Código `ALC-B` (Solo alcohol)
+- **Solo Tabaco**: Código `TOB-B` (Solo tabaco)
+- **Sin Restricciones**: Código `STD-B` (Estándar)
+
+#### ⚙️ Lógica Implementada:
+
+```typescript
+const hasAlcohol = invoice.lines.some((line) =>
+    line.description.toLowerCase().includes("alcohol")
+);
+const hasTobacco = invoice.lines.some((line) =>
+    line.description.toLowerCase().includes("tobacco")
+);
+
+if (hasAlcohol && hasTobacco) account = "MULTI-B";
+else if (hasAlcohol) account = "ALC-B";
+else if (hasTobacco) account = "TOB-B";
+else account = "STD-B";
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+#### 📊 Matriz de Categorización:
 
-## Resources
+| **Alcohol** | **Tabaco** | **Código** | **Descripción**       |
+| ----------- | ---------- | ---------- | --------------------- |
+| ✅          | ✅         | `MULTI-B`  | 🚬🍷 Productos Mixtos |
+| ✅          | ❌         | `ALC-B`    | 🍷 Solo Alcohol       |
+| ❌          | ✅         | `TOB-B`    | 🚬 Solo Tabaco        |
+| ❌          | ❌         | `STD-B`    | 📋 Productos Estándar |
 
-Check out a few resources that may come in handy when working with NestJS:
+#### 🎯 Ejemplos Prácticos:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+| **Líneas de Factura**                | **Resultado** |
+| ------------------------------------ | ------------- |
+| "Wine bottles", "Cigarette packs"    | `MULTI-B`     |
+| "Beer", "Office supplies"            | `ALC-B`       |
+| "Tobacco leaves", "Packaging"        | `TOB-B`       |
+| "Office chairs", "Computer monitors" | `STD-B`       |
 
-## Support
+---
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 🔧 Implementación Técnica
 
-## Stay in touch
+### 🏭 Factory Pattern
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+El sistema utiliza el patrón Factory para crear los procesadores apropiados:
 
-## License
+```typescript
+class ProcessorFactory {
+    createVendorProcessor(company: string): IVendorProcessor {
+        switch (company.toUpperCase()) {
+            case "A":
+                return new CompanyAVendorProcessor();
+            case "B":
+                return new CompanyBVendorProcessor();
+            default:
+                throw new Error("Unsupported company");
+        }
+    }
+}
+```
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 🧪 Beneficios de la Arquitectura
+
+- **🔄 Extensibilidad**: Agregar Compañía C es agregar nuevos processors
+- **🧩 Mantenibilidad**: Cada lógica está encapsulada en su propia clase
+- **🧪 Testeable**: Cada processor se puede probar independientemente
+- **📈 Escalable**: No hay límite en el número de compañías soportadas
+
+---
+
+## 🎯 Puntos Clave
+
+1. **Separación Clara**: Cada compañía tiene sus propios processors
+2. **Lógica Específica**: Las reglas de negocio están claramente definidas
+3. **Flexibilidad**: Fácil modificación de reglas existentes
+4. **Consistencia**: Misma interfaz para diferentes implementaciones
+5. **Robustez**: Validaciones exhaustivas y manejo de casos edge
+
+---
+
+## ⚙️ Ejemplos de consumo/respuesta
+
+---
+
+## 🧾 Ejemplos de consumo/respuesta para vendors
+
+1. **company-a-international-vendor.example**:
+
+```json
+{
+    "company": "A",
+    "vendorName": "Falabella",
+    "country": "CO",
+    "bank": "Bancolombia"
+}
+```
+
+1. **company-a-international-vendor.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "Falabella",
+        "country": "CO",
+        "bank": "Bancolombia",
+        "internationalBank": "Please confirm international bank details"
+    },
+    "errors": null
+}
+```
+
+2. **company-a-local-vendor.example**:
+
+```json
+{
+    "company": "A",
+    "vendorName": "NIKE",
+    "country": "US",
+    "bank": "JPMorgan"
+}
+```
+
+2. **company-a-local-vendor.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "NIKE",
+        "country": "US",
+        "bank": "JPMorgan"
+    },
+    "errors": null
+}
+```
+
+3. **company-b-international-vendor.example**:
+
+```json
+{
+    "company": "B",
+    "vendorName": "ZARA",
+    "country": "ESP",
+    "bank": "Banco Santander "
+}
+```
+
+3. **company-b-international-vendor.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "ZARA",
+        "country": "ESP",
+        "bank": "Banco Santander ",
+        "vendorStatus": "Verified"
+    },
+    "errors": null
+}
+```
+
+4. **company-b-local-vendor-with-missing-properties.example**:
+
+```json
+{
+    "company": "B",
+    "vendorName": "MCDONALDS",
+    "country": "US",
+    "bank": "Bank of America"
+}
+```
+
+4. **company-b-local-vendor-with-missing-properties.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "MCDONALDS",
+        "country": "US",
+        "bank": "Bank of America",
+        "vendorStatus": "Incomplete - missing registration/tax details"
+    },
+    "errors": null
+}
+```
+
+5. **company-b-local-vendor.example**:
+
+```json
+{
+    "company": "B",
+    "vendorName": "BURGER KING",
+    "country": "US",
+    "bank": "Citigroup",
+    "registrationNumber": "ORDER34715",
+    "taxId": "TAX34715"
+}
+```
+
+5. **company-b-local-vendor.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "BURGER KING",
+        "country": "US",
+        "bank": "Citigroup",
+        "vendorStatus": "Verified"
+    },
+    "errors": null
+}
+```
+
+## 🧾 Ejemplos de consumo/respuesta para Invoices
+
+1. **company-a-invoice-alcohol.example**:
+
+```json
+{
+    "company": "A",
+    "invoiceId": "EXT4921",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        { "description": "soda drinks", "amount": 1020.0 },
+        { "description": "tequila - alcohol", "amount": 20000.0 }
+    ]
+}
+```
+
+1. **company-a-invoice-alcohol.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "ALC-001",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT4921",
+        "lines": [
+            {
+                "description": "soda drinks",
+                "amount": 1020
+            },
+            {
+                "description": "tequila - alcohol",
+                "amount": 20000
+            }
+        ]
+    },
+    "errors": null
+}
+```
+
+2. **company-a-invoice-without-alcohol.example**:
+
+```json
+{
+    "company": "A",
+    "invoiceId": "EXT9127",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        { "description": "soda drinks", "amount": 1020.0 },
+        { "description": "chips", "amount": 20000.0 }
+    ]
+}
+```
+
+2. **company-a-invoice-without-alcohol.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "STD-001",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT9127",
+        "lines": [
+            {
+                "description": "soda drinks",
+                "amount": 1020
+            },
+            {
+                "description": "chips",
+                "amount": 20000
+            }
+        ]
+    },
+    "errors": null
+}
+```
+
+3. **company-b-invoice-alcohol.example**:
+
+```json
+{
+    "company": "B",
+    "invoiceId": "EXT7887",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        { "description": "apples", "amount": 120.0 },
+        { "description": "beer - alcohol", "amount": 1000.0 }
+    ]
+}
+```
+
+3. **company-b-invoice-alcohol.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "ALC-B",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT7887",
+        "lines": [
+            {
+                "description": "apples",
+                "amount": 120
+            },
+            {
+                "description": "beer - alcohol",
+                "amount": 1000
+            }
+        ]
+    },
+    "errors": null
+}
+```
+
+4. **company-b-invoice-tobacco.example**:
+
+```json
+{
+    "company": "B",
+    "invoiceId": "EXT659",
+    "invoiceDate": "2025-06-12",
+    "lines": [{ "description": "cuban cigars - tobacco", "amount": 1000.0 }]
+}
+```
+
+4. **company-b-invoice-tobacco.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "TOB-B",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT659",
+        "lines": [
+            {
+                "description": "cuban cigars - tobacco",
+                "amount": 1000
+            }
+        ]
+    },
+    "errors": null
+}
+```
+
+5. **company-b-invoice-with-alcohol-and-tobacco.example**:
+
+```json
+{
+    "company": "B",
+    "invoiceId": "EXT6579",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        {
+            "description": "cuban cigars - tobacco",
+            "amount": 1000.0
+        },
+        {
+            "description": "beer - alcohol",
+            "amount": 1000.0
+        }
+    ]
+}
+```
+
+5. **company-b-invoice-with-alcohol-and-tobacco.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "MULTI-B",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT6579",
+        "lines": [
+            {
+                "description": "cuban cigars - tobacco",
+                "amount": 1000
+            },
+            {
+                "description": "beer - alcohol",
+                "amount": 1000
+            }
+        ]
+    },
+    "errors": null
+}
+```
+
+6. **company-b-invoice-without-alcohol-or-tobacco.example**:
+
+```json
+{
+    "company": "B",
+    "invoiceId": "EXT6559",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        {
+            "description": "egg candys",
+            "amount": 1000.0
+        },
+        {
+            "description": "gelatin gummies",
+            "amount": 1000.0
+        }
+    ]
+}
+```
+
+6. **company-b-invoice-without-alcohol-or-tobacco.example.api.response**:
+
+```json
+{
+    "status": 200,
+    "message": "success invoice transform",
+    "item": {
+        "account": "STD-B",
+        "invoiceDate": "2025-06-12",
+        "invoiceId": "EXT6559",
+        "lines": [
+            {
+                "description": "egg candys",
+                "amount": 1000
+            },
+            {
+                "description": "gelatin gummies",
+                "amount": 1000
+            }
+        ]
+    },
+    "errors": null
+}
+```
