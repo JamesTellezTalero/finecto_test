@@ -16,32 +16,29 @@ import { BadRequestResponse } from "src/shared/dtos/api-responses/errors/bad-req
 import { ConflictResponse } from "../dtos/api-responses/errors/conflict-error-response.dto";
 
 /**
- * Filtro global para capturar y normalizar todas las excepciones que ocurren en la aplicación.
+ * Global exception filter that captures and standardizes all unhandled exceptions
+ * in the application.
  *
- * Este filtro intercepta cualquier excepción no manejada y transforma la respuesta HTTP
- * en un formato estándar definido por los DTOs de respuesta, facilitando la gestión y
- * el control de errores en el cliente.
+ * This filter intercepts any thrown exception and transforms it into a consistent
+ * response format using standardized API response DTOs.
  */
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
-    private readonly AllExceptionsFilterLogger = new Logger(
-        AllExceptionsFilter.name
-    );
+    private readonly logger = new Logger(AllExceptionsFilter.name);
 
     /**
-     * Método encargado de capturar la excepción, registrar información de error en consola
-     * y enviar una respuesta HTTP normalizada al cliente.
+     * Handles the caught exception by logging it and sending a standardized HTTP response.
      *
-     * @param exception Objeto de la excepción lanzada.
-     * @param host Contexto de ejecución que contiene la petición y respuesta HTTP.
+     * @param exception - The thrown exception object.
+     * @param host - Provides access to the request and response objects.
      */
-    catch(exception: unknown, host: ArgumentsHost) {
+    catch(exception: unknown, host: ArgumentsHost): void {
         const context = host.switchToHttp();
         const request = context.getRequest<Request>();
         const response = context.getResponse();
 
-        this.AllExceptionsFilterLogger.error(
-            `ERROR ${request.url}, exception: `,
+        this.logger.error(
+            `ERROR at ${request.url} - Exception: `,
             JSON.stringify(exception)
         );
 
@@ -49,12 +46,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
             response.status(exception.status).json(exception);
         else if (exception instanceof BadRequestException)
             response
-                .status(exception?.getStatus())
-                .json(new BadRequestResponse(exception?.message, null));
+                .status(exception.getStatus())
+                .json(new BadRequestResponse(exception.message, null));
         else if (exception instanceof ConflictException)
             response
-                .status(exception?.getStatus())
-                .json(new ConflictResponse(exception?.message));
+                .status(exception.getStatus())
+                .json(new ConflictResponse(exception.message));
         else
             response
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)

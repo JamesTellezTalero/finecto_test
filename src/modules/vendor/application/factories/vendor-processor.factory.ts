@@ -4,8 +4,21 @@ import { CompanyAVendorProcessor } from "../processors/company-a-vendor.processo
 import { CompanyBVendorProcessor } from "../processors/company-b-vendor.processor";
 import { ConflictResponse } from "src/shared/dtos/api-responses/errors/conflict-error-response.dto";
 
+/**
+ * Factory service for creating vendor processors based on company type
+ * @class VendorProcessorFactory
+ * @description Creates appropriate vendor processor instances based on company identifier
+ */
 @Injectable()
 export class VendorProcessorFactory {
+    /**
+     * Creates a vendor processor instance for the specified company
+     * @param {string} company - Company identifier (case-insensitive)
+     * @returns {IVendorProcessor} Vendor processor instance for the company
+     * @throws {ConflictResponse} When company is not supported
+     * @example
+     * const processor = factory.createVendorProcessor("A");
+     */
     createVendorProcessor(company: string): IVendorProcessor {
         switch (company.toUpperCase()) {
             case "A":

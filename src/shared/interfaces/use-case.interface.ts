@@ -1,14 +1,14 @@
 /**
- * Contrato base para todos los casos de uso de la aplicación.
+ * Base contract for all application use cases.
  *
- * Esta interfaz genérica permite definir casos de uso que reciben una entrada (`TInput`)
- * y devuelven una salida (`TOutput`) de forma asíncrona.
+ * This generic interface defines use cases that take an input (`TInput`)
+ * and return an output (`TOutput`) asynchronously.
  *
- * Se recomienda que todos los casos de uso implementen esta interfaz para mantener
- * una estructura uniforme y predecible.
+ * It is recommended that all use cases implement this interface to maintain
+ * a consistent and predictable structure across the application.
  *
- * @template TInput - Tipo del parámetro de entrada que recibe el caso de uso.
- * @template TOutput - Tipo del resultado que devuelve el caso de uso.
+ * @template TInput - The type of the input parameter required by the use case.
+ * @template TOutput - The type of the result returned by the use case.
  *
  * @example
  * interface CreateUserInput {
@@ -23,16 +23,16 @@
  *
  * class CreateUserUseCase implements IUseCase<CreateUserInput, CreateUserOutput> {
  *   async execute(input: CreateUserInput): Promise<CreateUserOutput> {
- *     lógica de creación de usuario
+ *     // user creation logic
  *   }
  * }
  */
 export interface IUseCase<TInput, TOutput> {
     /**
-     * Ejecuta la lógica del caso de uso.
+     * Executes the use case logic.
      *
-     * @param input - Datos necesarios para ejecutar el caso de uso.
-     * @returns Una promesa que resuelve con el resultado del caso de uso.
+     * @param input - Data required to execute the use case.
+     * @returns A promise resolving to the result of the use case.
      */
     execute(input: TInput): Promise<TOutput>;
 }

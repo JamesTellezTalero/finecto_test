@@ -2,16 +2,21 @@ import { HttpStatus } from "@nestjs/common";
 import { ApiResponseDto } from "../api-response.dto";
 
 /**
- * Representa una respuesta errores ointernos de servicio de la API (código 500)
+ * Represents an API response for internal server errors (HTTP status code 500).
+ *
+ * This class is used when an unexpected error occurs on the server side.
  */
 export class InternalServerErrorResponse extends ApiResponseDto<void, void> {
     /**
-     * Crea una nueva instancia de respuesta InternalServerErrorResponse
-     * @param message Mensaje descriptivo del error
-     * @param item Datos a retornar (opcional)
+     * Creates a new instance of `InternalServerErrorResponse`.
+     *
+     * @param message - A human-readable message describing the internal error.
+     *
+     * @example
+     * throw new InternalServerErrorResponse("Unexpected server error occurred");
      */
     constructor(message: string) {
-        // Usa el método protegido de la clase padre para crear la instancia
+        // Uses the parent class's protected method to create the response instance
         super(HttpStatus.INTERNAL_SERVER_ERROR, message);
     }
 }

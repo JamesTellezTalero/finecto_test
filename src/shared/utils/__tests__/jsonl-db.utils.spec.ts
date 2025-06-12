@@ -51,7 +51,7 @@ describe("JsonlDbUtils", () => {
         } catch (err) {
             expect(err).toBeInstanceOf(ConflictResponse);
             expect(err.message).toBe(
-                'El objeto debe incluir el campo "type" (e.g., "vendor", "invoice")'
+                'The object must include a "type" field (e.g., "vendor", "invoice").'
             );
         }
     });
@@ -60,6 +60,7 @@ describe("JsonlDbUtils", () => {
         mockedFs.existsSync.mockReturnValue(true);
 
         JsonlDbUtils.append(validData);
+
         expect(mockedFs.mkdirSync).not.toHaveBeenCalled();
         expect(mockedFs.appendFileSync).toHaveBeenCalledTimes(1);
 

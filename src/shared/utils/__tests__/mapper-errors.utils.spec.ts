@@ -19,7 +19,7 @@ describe("mapperErrorsUtils", () => {
         expect(result).toEqual([
             {
                 item: "email",
-                previusValue: "invalid-email",
+                previousValue: "invalid-email",
                 message: "email must be an email"
             }
         ]);
@@ -49,7 +49,7 @@ describe("mapperErrorsUtils", () => {
         expect(result).toEqual([
             {
                 item: "user.name",
-                previusValue: "",
+                previousValue: "",
                 message: "name should not be empty"
             }
         ]);
@@ -71,8 +71,8 @@ describe("mapperErrorsUtils", () => {
 
         expect(result).toEqual([
             {
-                item: "name on index [2]",
-                previusValue: "123",
+                item: "name at index [2]",
+                previousValue: "123",
                 message: "name must be a string"
             }
         ]);
