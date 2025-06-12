@@ -1,0 +1,9 @@
+{
+    "company": "A",
+    "invoiceId": "EXT9127",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        { "description": "soda drinks", "amount": 1020.0 },
+        { "description": "chips", "amount": 20000.0 }
+    ]
+}

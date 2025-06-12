@@ -1,0 +1,9 @@
+{
+    "company": "B",
+    "invoiceId": "EXT6579",
+    "invoiceDate": "2025-06-12",
+    "lines": [
+        { "description": "cuban cigars - tobacco", "amount": 1000.0 },
+        { "description": "beer - alcohol", "amount": 1000.0 }
+    ]
+}
