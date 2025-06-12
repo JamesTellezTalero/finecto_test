@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from "@nestjs/common";
-import { VendorInputDto } from "../dtos/vendor.dto";
+import { VendorInputDto } from "../dtos/vendor-input.dto";
 import { CreateBankUseCase } from "../../application/use-cases/vendor-transform.use-case";
 
 @Controller("vendor")

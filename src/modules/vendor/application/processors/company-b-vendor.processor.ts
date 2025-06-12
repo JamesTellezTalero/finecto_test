@@ -13,16 +13,22 @@ export class CompanyBVendorProcessor implements IVendorProcessor {
         );
 
         if (
-            vendor.country === "US" &&
+            vendor.country.toLocaleUpperCase() === "US" &&
             vendor.registrationNumber == null &&
             vendor.taxId == null
         )
             transformedVendor.vendorStatus =
                 "Incomplete - missing registration/tax details";
-        else if (vendor.country === "US" && vendor.registrationNumber == null)
+        else if (
+            vendor.country.toLocaleUpperCase() === "US" &&
+            vendor.registrationNumber == null
+        )
             transformedVendor.vendorStatus =
                 "Incomplete - missing registration details";
-        else if (vendor.country === "US" && vendor.taxId == null)
+        else if (
+            vendor.country.toLocaleUpperCase() === "US" &&
+            vendor.taxId == null
+        )
             transformedVendor.vendorStatus = "Incomplete - missing tax details";
 
         transformedVendor.vendorStatus =

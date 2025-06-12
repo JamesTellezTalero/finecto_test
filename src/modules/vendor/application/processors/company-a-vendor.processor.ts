@@ -12,7 +12,7 @@ export class CompanyAVendorProcessor implements IVendorProcessor {
             vendor.bank
         );
         // Company A Business Logic: International Vendor Check
-        if (vendor.country !== "US") {
+        if (vendor.country.toLocaleUpperCase() !== "US") {
             transformedVendor.internationalBank =
                 "Please confirm international bank details";
         }
