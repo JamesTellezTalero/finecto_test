@@ -6,6 +6,49 @@ Este middleware implementa lógicas de negocio específicas para cada compañía
 
 ---
 
+## 🔍 Swagger
+
+Este middleware implementa swagger papra la documentacion
+
+🪐 ruta: `http://localhost:3000/api`
+
+## ⚙️ Versiones
+
+- **🔄 NodeJS**: v18.18.0
+- **🧩 NestJS**: 10.4.5
+- **🧪 Jest**: ^29.7.0
+- **🔍 Swagger**: ^7.4.0
+
+---
+
+## 🔧 Run Proyect
+
+- **🔄 NodeJS**:
+
+```bash
+
+npm i --save
+
+npm run start:dev
+
+```
+
+- **🧩 Docker (Opcional)**:
+
+```bash
+
+docker build -t finecto_test .
+
+docker run --name finecto_test_container -p 3000:3000 -d finecto_test
+
+docker ps
+
+docker logs finecto_test_container
+
+```
+
+---
+
 ## 🏢 Compañía A - Lógicas de Negocio
 
 ### 👥 Procesamiento de Vendedores (Company A)
