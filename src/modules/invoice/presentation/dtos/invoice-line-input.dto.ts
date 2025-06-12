@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
 import { IsNotEmpty, IsNumber, IsPositive, IsString } from "class-validator";
+import { ApiProperty } from "@nestjs/swagger";
 
 /**
  * Input DTO for invoice line item with validation
@@ -16,6 +17,10 @@ export class InvoiceLineInputDto {
     @Expose()
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({
+        description: "Description of the invoice line item",
+        example: "Premium software license"
+    })
     description: string;
 
     /**
@@ -27,5 +32,9 @@ export class InvoiceLineInputDto {
     @Expose()
     @IsNumber()
     @IsPositive()
+    @ApiProperty({
+        description: "Amount for this invoice line",
+        example: 299.99
+    })
     amount: number;
 }

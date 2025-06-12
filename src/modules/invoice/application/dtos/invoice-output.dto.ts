@@ -1,4 +1,5 @@
 import { InvoiceLineOutputDto } from "./invoice-line-output.dto";
+import { ApiProperty } from "@nestjs/swagger";
 
 /**
  * Output DTO for invoice data
@@ -10,6 +11,10 @@ export class InvoiceOutputDto {
      * @type {string}
      * @example "ACC-12345"
      */
+    @ApiProperty({
+        description: "Account identifier",
+        example: "ACC-12345"
+    })
     account: string;
 
     /**
@@ -17,6 +22,10 @@ export class InvoiceOutputDto {
      * @type {string}
      * @example "2024-03-15"
      */
+    @ApiProperty({
+        description: "Invoice date in string format",
+        example: "2024-03-15"
+    })
     invoiceDate: string;
 
     /**
@@ -24,6 +33,10 @@ export class InvoiceOutputDto {
      * @type {string}
      * @example "INV-2024-001"
      */
+    @ApiProperty({
+        description: "Unique invoice identifier",
+        example: "INV-2024-001"
+    })
     invoiceId: string;
 
     /**
@@ -31,15 +44,19 @@ export class InvoiceOutputDto {
      * @type {InvoiceLineOutputDto[]}
      * @example [{ description: "Software license", amount: 299.99 }]
      */
+    @ApiProperty({
+        description: "Array of invoice line items",
+        type: [InvoiceLineOutputDto],
+        example: [
+            {
+                description: "Software license - alcohol",
+                amount: 299.99
+            },
+            { description: "Software license", amount: 299.99 }
+        ]
+    })
     lines: InvoiceLineOutputDto[];
 
-    /**
-     * Creates an instance of InvoiceOutputDto
-     * @param {string} account - Account identifier
-     * @param {string} invoiceId - Unique invoice identifier
-     * @param {string} invoiceDate - Invoice date in string format
-     * @param {InvoiceLineOutputDto[]} lines - Array of invoice line items
-     */
     constructor(
         account: string,
         invoiceId: string,

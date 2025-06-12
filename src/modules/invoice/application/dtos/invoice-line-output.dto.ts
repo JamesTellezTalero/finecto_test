@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+
 /**
  * Output DTO for invoice line data
  * @class InvoiceLineOutputDto
@@ -8,6 +10,10 @@ export class InvoiceLineOutputDto {
      * @type {string}
      * @example "Premium software license"
      */
+    @ApiProperty({
+        description: "Description of the invoice line item",
+        example: "Premium software license"
+    })
     description: string;
 
     /**
@@ -15,5 +21,9 @@ export class InvoiceLineOutputDto {
      * @type {number}
      * @example 299.99
      */
+    @ApiProperty({
+        description: "Amount for this invoice line",
+        example: 299.99
+    })
     amount: number;
 }

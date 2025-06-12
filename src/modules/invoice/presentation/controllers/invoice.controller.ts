@@ -2,6 +2,20 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { InvoiceInputDto } from "../dtos/invoice-input.dto";
 import { InvoiceTransformUseCase } from "../../application/use-cases/invoice-transform.use-case";
 import { SuccessResponse } from "src/shared/dtos/api-responses/success-response.dto";
+import {
+    ApiBearerAuth,
+    ApiBody,
+    ApiExtraModels,
+    ApiOperation,
+    ApiResponse,
+    ApiTags,
+    getSchemaPath
+} from "@nestjs/swagger";
+import { ApiResponseDto } from "src/shared/dtos/api-responses/api-response.dto";
+import { MappedError } from "src/shared/utils/mapper-errors.utils";
+import { InvoiceLineInputDto } from "../dtos/invoice-line-input.dto";
+import { InvoiceOutputDto } from "../../application/dtos/invoice-output.dto";
+import { InvoiceLineOutputDto } from "../../application/dtos/invoice-line-output.dto";
 
 /**
  * Controller for invoice operations
@@ -9,6 +23,15 @@ import { SuccessResponse } from "src/shared/dtos/api-responses/success-response.
  * @description Handles HTTP requests related to invoice processing and transformation
  */
 @Controller("invoice")
+@ApiTags("transfer")
+@ApiExtraModels(
+    ApiResponseDto,
+    MappedError,
+    InvoiceLineInputDto,
+    InvoiceInputDto,
+    InvoiceLineOutputDto,
+    InvoiceOutputDto
+)
 export class InvoiceController {
     /**
      * Creates an instance of InvoiceController
@@ -35,6 +58,59 @@ export class InvoiceController {
      * }
      */
     @Post("")
+    @ApiOperation({ summary: "success invoice transform" })
+    @ApiBody({ type: InvoiceInputDto })
+    @ApiResponse({
+        status: 200,
+        description: "success invoice transform",
+        schema: {
+            allOf: [
+                { $ref: getSchemaPath(ApiResponseDto) },
+                {
+                    properties: {
+                        status: { type: "number", example: 200 },
+                        message: {
+                            type: "string",
+                            example: "success invoice transform"
+                        },
+                        item: {
+                            $ref: getSchemaPath(InvoiceOutputDto)
+                        },
+                        errors: {
+                            nullable: true
+                        }
+                    }
+                }
+            ]
+        }
+    })
+    @ApiResponse({
+        status: 400,
+        description: "Incomplete Fields",
+        schema: {
+            allOf: [
+                { $ref: getSchemaPath(ApiResponseDto) },
+                {
+                    properties: {
+                        status: { type: "number", example: 400 },
+                        message: {
+                            type: "string",
+                            example: "Incomplete Fields"
+                        },
+                        item: {
+                            nullable: true
+                        },
+                        errors: {
+                            type: "array",
+                            items: {
+                                $ref: getSchemaPath(MappedError)
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    })
     async InvoiceTransformData(@Body() invoiceDto: InvoiceInputDto) {
         invoiceDto = await InvoiceInputDto.FromPlain(invoiceDto);
         return new SuccessResponse(
