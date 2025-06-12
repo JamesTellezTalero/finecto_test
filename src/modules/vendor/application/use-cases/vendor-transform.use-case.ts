@@ -5,7 +5,9 @@ import { VendorOutputDto } from "../dtos/vendor-output.dto";
 import { VendorProcessorFactory } from "../factories/vendor-processor.factory";
 
 @Injectable()
-export class CreateBankUseCase implements IUseCase<VendorDto, VendorOutputDto> {
+export class VendorTransformUseCase
+    implements IUseCase<VendorDto, VendorOutputDto>
+{
     constructor(
         private readonly vendorProcessorFactory: VendorProcessorFactory
     ) {}

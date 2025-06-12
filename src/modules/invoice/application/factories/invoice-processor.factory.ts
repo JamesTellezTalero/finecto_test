@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
 import { CompanyAInvoiceProcessor } from "../procesors/company-a-invoice.processor";
 import { CompanyBInvoiceProcessor } from "../procesors/company-b-invoice.processor";
+import { ConflictResponse } from "src/shared/dtos/api-responses/errors/conflict-error-response.dto";
 
 @Injectable()
 export class InvoiceProcessorFactory {
@@ -12,7 +13,7 @@ export class InvoiceProcessorFactory {
             case "B":
                 return new CompanyBInvoiceProcessor();
             default:
-                throw new Error(`Unsupported company: ${company}`);
+                throw new ConflictResponse(`Unsupported company: ${company}`);
         }
     }
 }

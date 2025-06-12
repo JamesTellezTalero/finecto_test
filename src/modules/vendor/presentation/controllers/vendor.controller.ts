@@ -1,15 +1,21 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { VendorInputDto } from "../dtos/vendor-input.dto";
-import { CreateBankUseCase } from "../../application/use-cases/vendor-transform.use-case";
+import { VendorTransformUseCase } from "../../application/use-cases/vendor-transform.use-case";
+import { SuccessResponse } from "src/shared/dtos/api-responses/success-response.dto";
 
 @Controller("vendor")
 export class VendorController {
-    constructor(private readonly createBankUseCase: CreateBankUseCase) {}
+    constructor(
+        private readonly vendorTransformUseCase: VendorTransformUseCase
+    ) {}
 
     @Post("")
     async VendorTransformData(@Body() vendorDto: VendorInputDto) {
         vendorDto = await VendorInputDto.FromPlain(vendorDto);
 
-        return await this.createBankUseCase.execute(vendorDto);
+        return new SuccessResponse(
+            "success vendor transform",
+            await this.vendorTransformUseCase.execute(vendorDto)
+        );
     }
 }
