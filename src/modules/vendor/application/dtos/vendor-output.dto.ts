@@ -1,6 +1,4 @@
-import { Expose } from "class-transformer";
-import { IsNotEmpty, IsOptional, IsString, ValidateIf } from "class-validator";
-import { BaseDto } from "src/shared/dtos/base/base.dto";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 /**
  * Output DTO for vendor data
@@ -13,6 +11,10 @@ export class VendorOutputDto {
      * @type {string}
      * @example "Tech Solutions Inc"
      */
+    @ApiProperty({
+        description: "Name of the vendor",
+        example: "Tech Solutions Inc"
+    })
     vendorName: string;
 
     /**
@@ -20,6 +22,10 @@ export class VendorOutputDto {
      * @type {string}
      * @example "USA"
      */
+    @ApiProperty({
+        description: "Country where the vendor is located",
+        example: "USA"
+    })
     country: string;
 
     /**
@@ -27,6 +33,10 @@ export class VendorOutputDto {
      * @type {string}
      * @example "Chase Bank"
      */
+    @ApiProperty({
+        description: "Primary bank of the vendor",
+        example: "Chase Bank"
+    })
     bank: string;
 
     /**
@@ -35,6 +45,10 @@ export class VendorOutputDto {
      * @example "SWIFT: CHASUS33"
      * @optional
      */
+    @ApiPropertyOptional({
+        description: "International bank information",
+        example: "SWIFT: CHASUS33"
+    })
     internationalBank?: string;
 
     /**
@@ -43,13 +57,14 @@ export class VendorOutputDto {
      * @example "ACTIVE"
      * @optional
      */
+    @ApiPropertyOptional({
+        description: "Current status of the vendor",
+        example: "ACTIVE"
+    })
     vendorStatus?: string;
 
     /**
      * Creates an instance of VendorOutputDto
-     * @param {string} vendorName - Name of the vendor
-     * @param {string} country - Country where the vendor is located
-     * @param {string} bank - Primary bank of the vendor
      */
     constructor(vendorName: string, country: string, bank: string) {
         this.vendorName = vendorName;

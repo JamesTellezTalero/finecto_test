@@ -1,5 +1,6 @@
 import { Expose } from "class-transformer";
-import { IsNotEmpty, IsOptional, IsString, ValidateIf } from "class-validator";
+import { IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { BaseDto } from "src/shared/dtos/base/base.dto";
 
 /**
@@ -13,65 +14,83 @@ export class VendorInputDto extends BaseDto<VendorInputDto> {
      * Company identifier
      * @type {string}
      * @example "COMPANY_A"
-     * @validation Non-empty string required
      */
     @Expose()
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({
+        description: "Company identifier",
+        example: "COMPANY_A"
+    })
     company: string;
 
     /**
      * Name of the vendor
      * @type {string}
      * @example "Tech Solutions Inc"
-     * @validation Non-empty string required
      */
     @Expose()
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({
+        description: "Name of the vendor",
+        example: "Tech Solutions Inc"
+    })
     vendorName: string;
 
     /**
      * Country where the vendor is located
      * @type {string}
      * @example "USA"
-     * @validation Non-empty string required
      */
     @Expose()
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({
+        description: "Country where the vendor is located",
+        example: "USA"
+    })
     country: string;
 
     /**
      * Primary bank of the vendor
      * @type {string}
      * @example "Chase Bank"
-     * @validation Non-empty string required
      */
     @Expose()
     @IsString()
     @IsNotEmpty()
+    @ApiProperty({
+        description: "Primary bank of the vendor",
+        example: "Chase Bank"
+    })
     bank: string;
 
     /**
      * Registration number of the vendor
      * @type {string}
      * @example "REG123456789"
-     * @validation Optional string
      */
     @Expose()
     @IsString()
     @IsOptional()
+    @ApiPropertyOptional({
+        description: "Registration number of the vendor",
+        example: "REG123456789"
+    })
     registrationNumber: string;
 
     /**
      * Tax identification number
      * @type {string}
      * @example "TAX987654321"
-     * @validation Optional string
      */
     @Expose()
     @IsString()
     @IsOptional()
+    @ApiPropertyOptional({
+        description: "Tax identification number",
+        example: "TAX987654321"
+    })
     taxId: string;
 }

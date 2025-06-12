@@ -23,7 +23,7 @@ import { InvoiceLineOutputDto } from "../../application/dtos/invoice-line-output
  * @description Handles HTTP requests related to invoice processing and transformation
  */
 @Controller("invoice")
-@ApiTags("transfer")
+@ApiTags("invoice")
 @ApiExtraModels(
     ApiResponseDto,
     MappedError,

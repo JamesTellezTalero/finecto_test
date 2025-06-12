@@ -1,3 +1,5 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+
 /**
  * DTO for vendor data transfer
  * @class VendorDto
@@ -9,6 +11,10 @@ export class VendorDto {
      * @type {string}
      * @example "COMPANY_A"
      */
+    @ApiProperty({
+        description: "Company identifier",
+        example: "COMPANY_A"
+    })
     company: string;
 
     /**
@@ -16,6 +22,10 @@ export class VendorDto {
      * @type {string}
      * @example "Tech Solutions Inc"
      */
+    @ApiProperty({
+        description: "Name of the vendor",
+        example: "Tech Solutions Inc"
+    })
     vendorName: string;
 
     /**
@@ -23,6 +33,10 @@ export class VendorDto {
      * @type {string}
      * @example "USA"
      */
+    @ApiProperty({
+        description: "Country where the vendor is located",
+        example: "USA"
+    })
     country: string;
 
     /**
@@ -30,21 +44,31 @@ export class VendorDto {
      * @type {string}
      * @example "Chase Bank"
      */
+    @ApiProperty({
+        description: "Primary bank of the vendor",
+        example: "Chase Bank"
+    })
     bank: string;
 
     /**
      * Registration number of the vendor (optional)
      * @type {string}
      * @example "REG123456789"
-     * @optional
      */
+    @ApiPropertyOptional({
+        description: "Registration number of the vendor",
+        example: "REG123456789"
+    })
     registrationNumber?: string;
 
     /**
      * Tax identification number (optional)
      * @type {string}
      * @example "TAX987654321"
-     * @optional
      */
+    @ApiPropertyOptional({
+        description: "Tax identification number",
+        example: "TAX987654321"
+    })
     taxId?: string;
 }
