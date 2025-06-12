@@ -7,12 +7,13 @@ import {
     Request,
     NotFoundException,
     BadRequestException,
-    Logger
+    Logger,
+    ConflictException
 } from "@nestjs/common";
 import { ApiResponseDto } from "../dtos/api-responses/api-response.dto";
 import { InternalServerErrorResponse } from "src/shared/dtos/api-responses/errors/internal-server-error-response.dto";
-import { NotFoundResponse } from "src/shared/dtos/api-responses/errors/not-found-error-response.dto";
 import { BadRequestResponse } from "src/shared/dtos/api-responses/errors/bad-request-error-response.dto";
+import { ConflictResponse } from "../dtos/api-responses/errors/conflict-error-response.dto";
 
 /**
  * Filtro global para capturar y normalizar todas las excepciones que ocurren en la aplicación.
@@ -50,10 +51,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
             response
                 .status(exception?.getStatus())
                 .json(new BadRequestResponse(exception?.message, null));
-        else if (exception instanceof NotFoundException)
+        else if (exception instanceof ConflictException)
             response
                 .status(exception?.getStatus())
-                .json(new NotFoundResponse(exception?.message));
+                .json(new ConflictResponse(exception?.message));
         else
             response
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
