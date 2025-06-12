@@ -189,7 +189,10 @@ class ProcessorFactory {
 
 ---
 
-## ⚙️ Ejemplos de consumo/respuesta
+## ⚙️ Rutas de Ejemplos
+
+📂 invoice: `./example-request/invoice`
+📂 vendor: `./example-request/vendor`
 
 ---
 
