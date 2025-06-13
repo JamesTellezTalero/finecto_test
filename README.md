@@ -239,6 +239,19 @@ class ProcessorFactory {
 
 ---
 
+## ⚙️ Rutas de Consumo
+
+📂 invoice: `http://localhost:3000/invoice/`
+📂 vendor: `http://localhost:3000/vendor`
+
+---
+
+## ⚙️ Ruta de Persistencia
+
+📂 result.jsonl: `./db/result.jsonl`
+
+---
+
 ## 🧾 Ejemplos de consumo/respuesta para vendors
 
 1. **company-a-international-vendor.example**:
