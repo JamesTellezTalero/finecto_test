@@ -247,13 +247,12 @@ export class VendorProcessorFactory {
 
 ## 🔧 Formato de Respuesta API
 
-El sistema implementa un formato de respuesta unicamente para las respuestas HTTP, este no se ve en la persistencia \n
-\n
-se compone por: \n
-status: Http Status, Numerico \n
-message: Mensage segun la peticion/error final \n
-item: objeto json correspondiente a la peticion ejecutada \n
-errors: objeto/array json con los errores en caso de body incompleto o con le formato incorrecto
+El sistema implementa un formato de respuesta unicamente para las respuestas HTTP, este no se ve en la persistencia. El formato elegido se compone por:
+
+1. **status**: Http Status, Numerico 
+2. **message**: Mensage segun la peticion/error final 
+3. **item**: objeto json correspondiente a la peticion ejecutada 
+4. **errors**: objeto/array json con los errores en caso de body incompleto o con le formato incorrecto
 
 ```json
 {
@@ -273,21 +272,21 @@ errors: objeto/array json con los errores en caso de body incompleto o con le fo
 
 ## ⚙️ Rutas de Ejemplos
 
-📂 invoice: `./example-request/invoice`\n
-📂 vendor: `./example-request/vendor`\n
+1. **📂 invoice**: `./example-request/invoice`
+2. **📂 vendor**: `./example-request/vendor`
 
 ---
 
 ## ⚙️ Rutas de Consumo
 
-📂 invoice: `http://localhost:3000/invoice/`\n
-📂 vendor: `http://localhost:3000/vendor`\n
+1. **📂 invoice**: `http://localhost:3000/invoice/`\n
+2. **📂 vendor**: `http://localhost:3000/vendor`\n
 
 ---
 
 ## ⚙️ Ruta de Persistencia
 
-📂 result.jsonl: `./db/result.jsonl`
+1 **📂 result.jsonl**: `./db/result.jsonl`
 
 ---
 
