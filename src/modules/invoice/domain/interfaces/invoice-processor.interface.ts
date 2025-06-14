@@ -1,5 +1,5 @@
-import { InvoiceOutputDto } from "../dtos/invoice-output.dto";
-import { InvoiceDto } from "../dtos/invoice.dto";
+import { InvoiceOutputDto } from "../../application/dtos/invoice-output.dto";
+import { InvoiceDto } from "../../application/dtos/invoice.dto";
 
 /**
  * Interface for invoice processing implementations

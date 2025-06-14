@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { InvoiceOutputDto } from "../dtos/invoice-output.dto";
-import { InvoiceDto } from "../dtos/invoice.dto";
+import { InvoiceDto } from "../../application/dtos/invoice.dto";
 import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
+import { Invoice } from "../entities/invoice.entity";
+import { InvoiceLine } from "../entities/invoice-line.entity";
 
 /**
  * Invoice processor implementation for Company B
@@ -14,7 +15,7 @@ export class CompanyBInvoiceProcessor implements IInvoiceProcessor {
     /**
      * Processes an invoice for Company B
      * @param {InvoiceDto} invoice - Input invoice data
-     * @returns {InvoiceOutputDto} Processed invoice with appropriate account code
+     * @returns {Invoice} Processed invoice with appropriate account code
      * @description Assigns account codes based on product categories:
      * - "MULTI-B": Both alcohol and tobacco items
      * - "ALC-B": Only alcohol items
@@ -26,7 +27,7 @@ export class CompanyBInvoiceProcessor implements IInvoiceProcessor {
      * - Invoice with only tobacco -> account: "TOB-B"
      * - Regular invoice -> account: "STD-B"
      */
-    processInvoice(invoice: InvoiceDto): InvoiceOutputDto {
+    processInvoice(invoice: InvoiceDto): Invoice {
         const hadAlcohol = invoice.lines.some((line) =>
             line.description.toLowerCase().includes("alcohol")
         );
@@ -40,11 +41,13 @@ export class CompanyBInvoiceProcessor implements IInvoiceProcessor {
         else if (hadTobacco) account = "TOB-B";
         else account = "STD-B";
 
-        return new InvoiceOutputDto(
+        return new Invoice(
             account,
             invoice.invoiceId,
             invoice.invoiceDate,
-            invoice.lines
+            invoice.lines.map(
+                (line) => new InvoiceLine(line.description, line.amount)
+            )
         );
     }
 }
