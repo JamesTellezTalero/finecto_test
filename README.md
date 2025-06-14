@@ -286,7 +286,7 @@ El sistema implementa un formato de respuesta unicamente para las respuestas HTT
 
 ## ⚙️ Ruta de Persistencia
 
-1 **📂 result.jsonl**: `./db/result.jsonl`
+1 **📂 result.jsonl**: `db/result.jsonl`
 
 ---
 
