@@ -1,3 +1,5 @@
+import { ApiProperty } from "@nestjs/swagger";
+import { Account } from "../constants/account.constant";
 import { ProductCategory } from "../constants/product-category.constant";
 import { InvoiceLine } from "./invoice-line.entity";
 
@@ -7,18 +9,46 @@ import { InvoiceLine } from "./invoice-line.entity";
  */
 export class Invoice {
     /**
-     * Creates an instance of Invoice.
-     * @param {string} company - Identifier for the company issuing the invoice.
-     * @param {string} invoiceId - Unique identifier for the invoice.
-     * @param {string} invoiceDate - Date of the invoice (format: YYYY-MM-DD).
-     * @param {InvoiceLine[]} lines - List of line items included in the invoice.
+     * The account assigned to this invoice.
+     * @type {string}
      */
-    constructor(
-        public readonly company: string,
-        public readonly invoiceId: string,
-        public readonly invoiceDate: string,
-        public readonly lines: InvoiceLine[]
-    ) {}
+    @ApiProperty({
+        description: "The account assigned to this invoice",
+        example: "ACC-12345"
+    })
+    public account: string;
+
+    @ApiProperty({
+        description: "Unique identifier for the invoice",
+        example: "INV-2024-001"
+    })
+    public readonly invoiceId: string;
+
+    @ApiProperty({
+        description: "Date of the invoice (format: YYYY-MM-DD)",
+        example: "2025-06-12"
+    })
+    public readonly invoiceDate: string;
+
+    @ApiProperty({
+        description: "List of line items included in the invoice",
+        type: () => [InvoiceLine]
+    })
+    public readonly lines: InvoiceLine[];
+
+    constructor(invoiceId: string, invoiceDate: string, lines: InvoiceLine[]) {
+        this.invoiceId = invoiceId;
+        this.invoiceDate = invoiceDate;
+        this.lines = lines;
+    }
+
+    /**
+     * Sets the account code assigned to this invoice.
+     * @param {Account} account - Account code to assign.
+     */
+    setAccount(account: Account): void {
+        this.account = account;
+    }
 
     /**
      * Checks if the invoice contains any alcohol-related items.
@@ -44,17 +74,9 @@ export class Invoice {
     getProductCategories(): ProductCategory[] {
         const categories: ProductCategory[] = [];
 
-        if (this.hasAlcoholItems()) {
-            categories.push(ProductCategory.ALCOHOL);
-        }
-
-        if (this.hasTobaccoItems()) {
-            categories.push(ProductCategory.TOBACCO);
-        }
-
-        if (categories.length === 0) {
-            categories.push(ProductCategory.STANDARD);
-        }
+        if (this.hasAlcoholItems()) categories.push(ProductCategory.ALCOHOL);
+        if (this.hasTobaccoItems()) categories.push(ProductCategory.TOBACCO);
+        if (categories.length === 0) categories.push(ProductCategory.STANDARD);
 
         return categories;
     }

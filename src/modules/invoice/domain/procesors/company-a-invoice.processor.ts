@@ -3,6 +3,8 @@ import { InvoiceDto } from "../../application/dtos/invoice.dto";
 import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
 import { Invoice } from "../entities/invoice.entity";
 import { InvoiceLine } from "../entities/invoice-line.entity";
+import { ProductCategory } from "../constants/product-category.constant";
+import { Account } from "../constants/account.constant";
 
 /**
  * Invoice processor implementation for Company A
@@ -21,18 +23,23 @@ export class CompanyAInvoiceProcessor implements IInvoiceProcessor {
      * Invoice with alcohol items -> account: "ALC-001"
      * Invoice without alcohol -> account: "STD-001"
      */
-    processInvoice(invoice: InvoiceDto): Invoice {
-        const hadAlcohol = invoice.lines.some((line) =>
-            line.description.toLowerCase().includes("alcohol")
-        );
-
-        return new Invoice(
-            hadAlcohol == true ? "ALC-001" : "STD-001",
-            invoice.invoiceId,
-            invoice.invoiceDate,
-            invoice.lines.map(
-                (line) => new InvoiceLine(line.description, line.amount)
+    processInvoice(invoiceDto: InvoiceDto): Invoice {
+        const invoice = new Invoice(
+            invoiceDto.invoiceId,
+            invoiceDto.invoiceDate,
+            invoiceDto.lines.map(
+                (line) =>
+                    new InvoiceLine(line.description.toUpperCase(), line.amount)
             )
         );
+
+        const ProductCategories = invoice.getProductCategories();
+        const hadAlcohol = ProductCategories.some(
+            (category) => category == ProductCategory.ALCOHOL
+        );
+        if (hadAlcohol) invoice.setAccount(Account.ALC_001);
+        else invoice.setAccount(Account.STD_001);
+
+        return invoice;
     }
 }

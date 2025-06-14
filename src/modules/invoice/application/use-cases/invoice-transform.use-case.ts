@@ -1,9 +1,9 @@
 import { IUseCase } from "src/shared/interfaces/use-case.interface";
 import { InvoiceDto } from "../dtos/invoice.dto";
-import { InvoiceOutputDto } from "../dtos/invoice-output.dto";
 import { InvoiceProcessorFactory } from "../../domain/factories/invoice-processor.factory";
 import { Injectable } from "@nestjs/common";
 import { JsonlDbUtils } from "src/shared/utils/jsonl-db.utils";
+import { Invoice } from "../../domain/entities/invoice.entity";
 
 /**
  * Use case for transforming invoice data based on company-specific rules
@@ -12,9 +12,7 @@ import { JsonlDbUtils } from "src/shared/utils/jsonl-db.utils";
  * @description Orchestrates invoice processing by selecting appropriate processor and logging results
  */
 @Injectable()
-export class InvoiceTransformUseCase
-    implements IUseCase<InvoiceDto, InvoiceOutputDto>
-{
+export class InvoiceTransformUseCase implements IUseCase<InvoiceDto, Invoice> {
     /**
      * Creates an instance of InvoiceTransformUseCase
      * @param {InvoiceProcessorFactory} invoiceProcessorFactory - Factory for creating invoice processors
@@ -37,7 +35,7 @@ export class InvoiceTransformUseCase
      *   lines: [{ description: "Software license", amount: 299.99 }]
      * });
      */
-    async execute(input: InvoiceDto): Promise<InvoiceOutputDto> {
+    async execute(input: InvoiceDto): Promise<Invoice> {
         const processor = this.invoiceProcessorFactory.createInvoiceProcessor(
             input.company
         );

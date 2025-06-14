@@ -3,6 +3,7 @@ import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
 import { CompanyAInvoiceProcessor } from "../procesors/company-a-invoice.processor";
 import { CompanyBInvoiceProcessor } from "../procesors/company-b-invoice.processor";
 import { ConflictResponse } from "src/shared/dtos/api-responses/errors/conflict-error-response.dto";
+import { CompanyType } from "../constants/company-type.constant";
 
 /**
  * Factory service for creating invoice processors based on company type
@@ -23,9 +24,9 @@ export class InvoiceProcessorFactory {
      */
     createInvoiceProcessor(company: string): IInvoiceProcessor {
         switch (company.toUpperCase()) {
-            case "A":
+            case CompanyType.COMPANY_A:
                 return new CompanyAInvoiceProcessor();
-            case "B":
+            case CompanyType.COMPANY_B:
                 return new CompanyBInvoiceProcessor();
             default:
                 throw new ConflictResponse(`Unsupported company: ${company}`);

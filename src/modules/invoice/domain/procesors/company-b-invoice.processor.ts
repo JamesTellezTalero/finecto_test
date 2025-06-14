@@ -3,6 +3,8 @@ import { InvoiceDto } from "../../application/dtos/invoice.dto";
 import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
 import { Invoice } from "../entities/invoice.entity";
 import { InvoiceLine } from "../entities/invoice-line.entity";
+import { ProductCategory } from "../constants/product-category.constant";
+import { Account } from "../constants/account.constant";
 
 /**
  * Invoice processor implementation for Company B
@@ -27,27 +29,28 @@ export class CompanyBInvoiceProcessor implements IInvoiceProcessor {
      * - Invoice with only tobacco -> account: "TOB-B"
      * - Regular invoice -> account: "STD-B"
      */
-    processInvoice(invoice: InvoiceDto): Invoice {
-        const hadAlcohol = invoice.lines.some((line) =>
-            line.description.toLowerCase().includes("alcohol")
-        );
-        const hadTobacco = invoice.lines.some((line) =>
-            line.description.toLowerCase().includes("tobacco")
-        );
-
-        let account = "";
-        if (hadAlcohol && hadTobacco) account = "MULTI-B";
-        else if (hadAlcohol) account = "ALC-B";
-        else if (hadTobacco) account = "TOB-B";
-        else account = "STD-B";
-
-        return new Invoice(
-            account,
-            invoice.invoiceId,
-            invoice.invoiceDate,
-            invoice.lines.map(
-                (line) => new InvoiceLine(line.description, line.amount)
+    processInvoice(invoiceDto: InvoiceDto): Invoice {
+        const invoice = new Invoice(
+            invoiceDto.invoiceId,
+            invoiceDto.invoiceDate,
+            invoiceDto.lines.map(
+                (line) =>
+                    new InvoiceLine(line.description.toUpperCase(), line.amount)
             )
         );
+
+        const ProductCategories = invoice.getProductCategories();
+        const hadAlcohol = ProductCategories.some(
+            (category) => category == ProductCategory.ALCOHOL
+        );
+        const hadTobacco = ProductCategories.some(
+            (category) => category == ProductCategory.TOBACCO
+        );
+        if (hadAlcohol && hadTobacco) invoice.setAccount(Account.MULTI_B);
+        else if (hadTobacco) invoice.setAccount(Account.TOB_B);
+        else if (hadAlcohol) invoice.setAccount(Account.ALC_B);
+        else invoice.setAccount(Account.STD_B);
+
+        return invoice;
     }
 }

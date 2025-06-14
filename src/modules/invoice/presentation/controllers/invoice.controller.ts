@@ -14,8 +14,8 @@ import {
 import { ApiResponseDto } from "src/shared/dtos/api-responses/api-response.dto";
 import { MappedError } from "src/shared/utils/mapper-errors.utils";
 import { InvoiceLineInputDto } from "../dtos/invoice-line-input.dto";
-import { InvoiceOutputDto } from "../../application/dtos/invoice-output.dto";
-import { InvoiceLineOutputDto } from "../../application/dtos/invoice-line-output.dto";
+import { Invoice } from "../../domain/entities/invoice.entity";
+import { InvoiceLine } from "../../domain/entities/invoice-line.entity";
 
 /**
  * Controller for invoice operations
@@ -29,8 +29,8 @@ import { InvoiceLineOutputDto } from "../../application/dtos/invoice-line-output
     MappedError,
     InvoiceLineInputDto,
     InvoiceInputDto,
-    InvoiceLineOutputDto,
-    InvoiceOutputDto
+    Invoice,
+    InvoiceLine
 )
 export class InvoiceController {
     /**
@@ -74,7 +74,7 @@ export class InvoiceController {
                             example: "success invoice transform"
                         },
                         item: {
-                            $ref: getSchemaPath(InvoiceOutputDto)
+                            $ref: getSchemaPath(Invoice)
                         },
                         errors: {
                             nullable: true
