@@ -8,7 +8,7 @@ Este middleware implementa lógicas de negocio específicas para cada compañía
 
 ## 🔍 Swagger
 
-Este middleware implementa swagger papra la documentacion
+Este middleware implementa swagger para la documentacion
 
 🪐 ruta: `http://localhost:3000/api`
 
@@ -63,10 +63,8 @@ docker logs finecto_test_container
 #### ⚙️ Lógica Implementada:
 
 ```typescript
-if (vendor.country.toUpperCase() !== "US") {
-    transformedVendor.internationalBank =
-        "Please confirm international bank details";
-}
+if (!vendor.isFromUS()) {
+   vendor.internationalBank = "Please confirm international bank details"; 
 ```
 
 #### 📊 Ejemplos de Transformación:
@@ -91,10 +89,12 @@ if (vendor.country.toUpperCase() !== "US") {
 #### ⚙️ Lógica Implementada:
 
 ```typescript
-const hasAlcohol = invoice.lines.some((line) =>
-    line.description.toLowerCase().includes("alcohol")
+const ProductCategories = invoice.getProductCategories();
+const hadAlcohol = ProductCategories.some(
+    (category) => category == ProductCategory.ALCOHOL
 );
-account = hasAlcohol ? "ALC-001" : "STD-001";
+if (hadAlcohol) invoice.setAccount(Account.ALC_001);
+else invoice.setAccount(Account.STD_001);
 ```
 
 #### 📊 Ejemplos de Transformación:
@@ -120,17 +120,21 @@ account = hasAlcohol ? "ALC-001" : "STD-001";
 #### ⚙️ Lógica Implementada:
 
 ```typescript
-if (vendor.country.toUpperCase() === "US") {
-    if (!vendor.registrationNumber && !vendor.taxId) {
-        status = "Incomplete - missing registration/tax details";
-    } else if (!vendor.registrationNumber) {
-        status = "Incomplete - missing registration details";
-    } else if (!vendor.taxId) {
-        status = "Incomplete - missing tax details";
-    } else {
-        status = "Verified";
-    }
-}
+if (
+    vendor.isFromUS() &&
+    !vendor.hasRegistrationNumber() &&
+    !vendor.hasTaxId()
+)
+    vendor.setVendorStatus(
+        "Incomplete - missing registration/tax details"
+    );
+else if (vendor.isFromUS() && !vendor.hasRegistrationNumber())
+    vendor.setVendorStatus("Incomplete - missing registration details");
+else if (vendor.isFromUS() && !vendor.hasTaxId())
+    vendor.setVendorStatus("Incomplete - missing tax details");
+else vendor.setVendorStatus("Verified");
+delete vendor.registrationNumber;
+delete vendor.taxId;
 ```
 
 #### 📊 Estados de Validación:
@@ -159,17 +163,17 @@ if (vendor.country.toUpperCase() === "US") {
 #### ⚙️ Lógica Implementada:
 
 ```typescript
-const hasAlcohol = invoice.lines.some((line) =>
-    line.description.toLowerCase().includes("alcohol")
+const ProductCategories = invoice.getProductCategories();
+const hadAlcohol = ProductCategories.some(
+    (category) => category == ProductCategory.ALCOHOL
 );
-const hasTobacco = invoice.lines.some((line) =>
-    line.description.toLowerCase().includes("tobacco")
+const hadTobacco = ProductCategories.some(
+    (category) => category == ProductCategory.TOBACCO
 );
-
-if (hasAlcohol && hasTobacco) account = "MULTI-B";
-else if (hasAlcohol) account = "ALC-B";
-else if (hasTobacco) account = "TOB-B";
-else account = "STD-B";
+if (hadAlcohol && hadTobacco) invoice.setAccount(Account.MULTI_B);
+else if (hadTobacco) invoice.setAccount(Account.TOB_B);
+else if (hadAlcohol) invoice.setAccount(Account.ALC_B);
+else invoice.setAccount(Account.STD_B);
 ```
 
 #### 📊 Matriz de Categorización:
@@ -199,18 +203,27 @@ else account = "STD-B";
 El sistema utiliza el patrón Factory para crear los procesadores apropiados:
 
 ```typescript
-class ProcessorFactory {
+export class VendorProcessorFactory {
+    /**
+     * Creates a vendor processor instance for the specified company
+     * @param {string} company - Company identifier (case-insensitive)
+     * @returns {IVendorProcessor} Vendor processor instance for the company
+     * @throws {ConflictResponse} When company is not supported
+     * @example
+     * const processor = factory.createVendorProcessor("A");
+     */
     createVendorProcessor(company: string): IVendorProcessor {
         switch (company.toUpperCase()) {
-            case "A":
+            case CompanyType.COMPANY_A:
                 return new CompanyAVendorProcessor();
-            case "B":
+            case CompanyType.COMPANY_B:
                 return new CompanyBVendorProcessor();
             default:
-                throw new Error("Unsupported company");
+                throw new ConflictResponse(`Unsupported company: ${company}`);
         }
     }
 }
+
 ```
 
 ### 🧪 Beneficios de la Arquitectura
@@ -234,13 +247,13 @@ class ProcessorFactory {
 
 ## 🔧 Formato de Respuesta API
 
-El sistema implementa un formato de respuesta unicamente para las respuestas HTTP, este no se ve en la persistencia
-
-se compone por:
-status: Http Status, Numerico
-message: Mensage segun la peticion/error final
-item: objeto json correspondiente a la peticion ejecutada
-errors: objeto/array json con los errores en caso de body impleto o con le formato incorrecto
+El sistema implementa un formato de respuesta unicamente para las respuestas HTTP, este no se ve en la persistencia \n
+\n
+se compone por: \n
+status: Http Status, Numerico \n
+message: Mensage segun la peticion/error final \n
+item: objeto json correspondiente a la peticion ejecutada \n
+errors: objeto/array json con los errores en caso de body incompleto o con le formato incorrecto
 
 ```json
 {
@@ -260,15 +273,15 @@ errors: objeto/array json con los errores en caso de body impleto o con le forma
 
 ## ⚙️ Rutas de Ejemplos
 
-📂 invoice: `./example-request/invoice`
-📂 vendor: `./example-request/vendor`
+📂 invoice: `./example-request/invoice`\n
+📂 vendor: `./example-request/vendor`\n
 
 ---
 
 ## ⚙️ Rutas de Consumo
 
-📂 invoice: `http://localhost:3000/invoice/`
-📂 vendor: `http://localhost:3000/vendor`
+📂 invoice: `http://localhost:3000/invoice/`\n
+📂 vendor: `http://localhost:3000/vendor`\n
 
 ---
 
