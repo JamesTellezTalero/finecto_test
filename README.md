@@ -232,6 +232,32 @@ class ProcessorFactory {
 
 ---
 
+## 🔧 Formato de Respuesta API
+
+El sistema implementa un formato de respuesta unicamente para las respuestas HTTP, este no se ve en la persistencia
+
+se compone por:
+status: Http Status, Numerico
+message: Mensage segun la peticion/error final
+item: objeto json correspondiente a la peticion ejecutada
+errors: objeto/array json con los errores en caso de body impleto o con le formato incorrecto
+
+```json
+{
+    "status": 200,
+    "message": "success vendor transform",
+    "item": {
+        "vendorName": "BURGER KING",
+        "country": "US",
+        "bank": "Citigroup",
+        "vendorStatus": "Verified"
+    },
+    "errors": null
+}
+```
+
+---
+
 ## ⚙️ Rutas de Ejemplos
 
 📂 invoice: `./example-request/invoice`
