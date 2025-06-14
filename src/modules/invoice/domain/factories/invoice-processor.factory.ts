@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { IInvoiceProcessor } from "../interfaces/invoice-processor.interface";
-import { CompanyAInvoiceProcessor } from "../interfaces/procesors/company-a-invoice.processor";
+import { CompanyAInvoiceProcessor } from "../procesors/company-a-invoice.processor";
 import { CompanyBInvoiceProcessor } from "../procesors/company-b-invoice.processor";
 import { ConflictResponse } from "src/shared/dtos/api-responses/errors/conflict-error-response.dto";
 

@@ -1,5 +1,5 @@
-import { InvoiceOutputDto } from "../../application/dtos/invoice-output.dto";
 import { InvoiceDto } from "../../application/dtos/invoice.dto";
+import { Invoice } from "../entities/invoice.entity";
 
 /**
  * Interface for invoice processing implementations
@@ -10,7 +10,7 @@ export interface IInvoiceProcessor {
     /**
      * Processes an invoice and transforms it to output format
      * @param {InvoiceDto} invoice - Input invoice data to be processed
-     * @returns {InvoiceOutputDto} Processed invoice in output format
+     * @returns {Invoice} Processed invoice in output format
      * @example
      * const result = processor.processInvoice({
      *   company: "A",
@@ -19,5 +19,5 @@ export interface IInvoiceProcessor {
      *   lines: [{ description: "Service", amount: 100 }]
      * });
      */
-    processInvoice(invoice: InvoiceDto): InvoiceOutputDto;
+    processInvoice(invoice: InvoiceDto): Invoice;
 }
