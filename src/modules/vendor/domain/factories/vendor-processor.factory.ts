@@ -3,6 +3,7 @@ import { IVendorProcessor } from "../interfaces/vendor-processor.interface";
 import { CompanyAVendorProcessor } from "../processors/company-a-vendor.processor";
 import { CompanyBVendorProcessor } from "../processors/company-b-vendor.processor";
 import { ConflictResponse } from "src/shared/dtos/api-responses/errors/conflict-error-response.dto";
+import { CompanyType } from "../constants/company-type.constant";
 
 /**
  * Factory service for creating vendor processors based on company type
@@ -21,9 +22,9 @@ export class VendorProcessorFactory {
      */
     createVendorProcessor(company: string): IVendorProcessor {
         switch (company.toUpperCase()) {
-            case "A":
+            case CompanyType.COMPANY_A:
                 return new CompanyAVendorProcessor();
-            case "B":
+            case CompanyType.COMPANY_B:
                 return new CompanyBVendorProcessor();
             default:
                 throw new ConflictResponse(`Unsupported company: ${company}`);

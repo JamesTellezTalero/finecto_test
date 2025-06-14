@@ -1,5 +1,5 @@
-import { VendorOutputDto } from "../dtos/vendor-output.dto";
-import { VendorDto } from "../dtos/vendor.dto";
+import { VendorDto } from "../../application/dtos/vendor.dto";
+import { Vendor } from "../entities/vendor.entity";
 
 /**
  * Interface for vendor processing implementations
@@ -10,7 +10,7 @@ export interface IVendorProcessor {
     /**
      * Processes a vendor and transforms it to output format
      * @param {VendorDto} vendor - Input vendor data to be processed
-     * @returns {VendorOutputDto} Processed vendor in output format
+     * @returns {Vendor} Processed vendor in output format
      * @example
      * const result = processor.processVendor({
      *   company: "A",
@@ -19,5 +19,5 @@ export interface IVendorProcessor {
      *   bank: "Chase Bank"
      * });
      */
-    processVendor(vendor: VendorDto): VendorOutputDto;
+    processVendor(vendor: VendorDto): Vendor;
 }

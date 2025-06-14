@@ -12,7 +12,7 @@ import {
 } from "@nestjs/swagger";
 import { ApiResponseDto } from "src/shared/dtos/api-responses/api-response.dto";
 import { MappedError } from "src/shared/utils/mapper-errors.utils";
-import { VendorOutputDto } from "../../application/dtos/vendor-output.dto";
+import { Vendor } from "../../domain/entities/vendor.entity";
 
 /**
  * Controller for vendor operations
@@ -21,7 +21,7 @@ import { VendorOutputDto } from "../../application/dtos/vendor-output.dto";
  */
 @Controller("vendor")
 @ApiTags("vendor")
-@ApiExtraModels(ApiResponseDto, MappedError, VendorInputDto, VendorOutputDto)
+@ApiExtraModels(ApiResponseDto, MappedError, VendorInputDto, Vendor)
 export class VendorController {
     /**
      * Creates an instance of VendorController
@@ -64,7 +64,7 @@ export class VendorController {
                             example: "success vendor transform"
                         },
                         item: {
-                            $ref: getSchemaPath(VendorOutputDto)
+                            $ref: getSchemaPath(Vendor)
                         },
                         errors: {
                             nullable: true

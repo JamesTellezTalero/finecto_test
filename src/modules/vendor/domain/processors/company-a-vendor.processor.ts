@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { IVendorProcessor } from "../interfaces/vendor-processor.interface";
-import { VendorDto } from "../dtos/vendor.dto";
-import { VendorOutputDto } from "../dtos/vendor-output.dto";
+import { VendorDto } from "../../application/dtos/vendor.dto";
+import { Vendor } from "../entities/vendor.entity";
 
 /**
  * Vendor processor implementation for Company A
@@ -14,24 +14,24 @@ export class CompanyAVendorProcessor implements IVendorProcessor {
     /**
      * Processes a vendor for Company A
      * @param {VendorDto} vendor - Input vendor data
-     * @returns {VendorOutputDto} Processed vendor with international bank check
+     * @returns {Vendor} Processed vendor with international bank check
      * @description Adds international bank confirmation request for non-US vendors
      * @example
      * // US vendor -> no additional requirements
      * // Non-US vendor -> internationalBank: "Please confirm international bank details"
      */
-    processVendor(vendor: VendorDto): VendorOutputDto {
-        const transformedVendor = new VendorOutputDto(
-            vendor.vendorName,
-            vendor.country,
-            vendor.bank
+    processVendor(vendorDto: VendorDto): Vendor {
+        const vendor = new Vendor(
+            vendorDto.vendorName,
+            vendorDto.country,
+            vendorDto.bank
         );
         // Company A Business Logic: International Vendor Check
-        if (vendor.country.toLocaleUpperCase() !== "US") {
-            transformedVendor.internationalBank =
+        if (!vendor.isFromUS()) {
+            vendor.internationalBank =
                 "Please confirm international bank details";
         }
 
-        return transformedVendor;
+        return vendor;
     }
 }
